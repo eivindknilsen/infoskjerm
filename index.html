@@ -1,0 +1,311 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Infoskjerm Nordfjord</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: infoskjerm utan interaksjon. Venstre: denne veka (dag-kort) og tavla med vekene som kjem.
+   Under tavla: valfag/prosjekt med lærarar for modulane som går no og dei næraste vekene. Høgre: vakter i dag. */
+:root {
+  --bg: #eef2f0; --surface: #ffffff; --fg: #14201b; --muted: #5a6a63; --faint: #8b9a93; --line: #d9e1dd;
+  --fjord: #164e52; --fjord-ink: #eaf5f3; --fjord-soft: #2a6a6d; --today: #f2b33d; --today-ink: #2a1d00;
+  --linje: #cfead3; --linje-ink: #17532a; --linje-bar: #3a9a55;
+  --tur: #cde6f5; --tur-ink: #0f4d6e; --tur-bar: #2b8fc4;
+  --tun: #e6def3; --tun-ink: #47306e; --tun-bar: #8463bd;
+  --ferie: #f8d6d2; --ferie-ink: #8a1f17; --ferie-bar: #d6473a;
+  --valfag: #f7e1df; --valfag-ink: #7a3533; --valfag-bar: #c77a74;
+  --none: #f3f6f5; --none-ink: #3c4a44; --none-bar: #b7c3be;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0d1513; --surface: #151f1c; --fg: #e6eeea; --muted: #9aaba4; --faint: #6f807a; --line: #26332f;
+  --fjord: #12393c; --fjord-ink: #e3f2ef; --fjord-soft: #5fa3a6; --today: #f2b33d; --today-ink: #2a1d00;
+  --linje: #1b3a23; --linje-ink: #ade3b6; --linje-bar: #4fb56b;
+  --tur: #13324a; --tur-ink: #a9d8f3; --tur-bar: #43a5d8;
+  --tun: #2a2340; --tun-ink: #d4c6f0; --tun-bar: #9b7fd1;
+  --ferie: #41201d; --ferie-ink: #f6b4ac; --ferie-bar: #e2645a;
+  --valfag: #392625; --valfag-ink: #efc3bf; --valfag-bar: #c98a84;
+  --none: #1b2623; --none-ink: #c9d5d0; --none-bar: #4a5a54; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0d1513; --surface: #151f1c; --fg: #e6eeea; --muted: #9aaba4; --faint: #6f807a; --line: #26332f;
+  --fjord: #12393c; --fjord-ink: #e3f2ef; --fjord-soft: #5fa3a6; --today: #f2b33d; --today-ink: #2a1d00;
+  --linje: #1b3a23; --linje-ink: #ade3b6; --linje-bar: #4fb56b;
+  --tur: #13324a; --tur-ink: #a9d8f3; --tur-bar: #43a5d8;
+  --tun: #2a2340; --tun-ink: #d4c6f0; --tun-bar: #9b7fd1;
+  --ferie: #41201d; --ferie-ink: #f6b4ac; --ferie-bar: #e2645a;
+  --valfag: #392625; --valfag-ink: #efc3bf; --valfag-bar: #c98a84;
+  --none: #1b2623; --none-ink: #c9d5d0; --none-bar: #4a5a54; color-scheme: dark }
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: clamp(14px, 1vw, 26px); line-height: 1.25; }
+.screen { min-height: 100%; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 19em); gap: 1.1em;
+  padding-block: 1.1em; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.main, .side { display: grid; gap: 1.1em; align-content: start; min-width: 0; }
+
+/* Denne veka */
+.hero { background: var(--fjord); color: var(--fjord-ink); border-radius: 14px; padding: 1.1em 1.3em 1.3em; display: grid; gap: 1em; }
+.hero-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.6em 2em; }
+.weekline { display: flex; align-items: flex-end; gap: 1em; flex-wrap: wrap; }
+.eyebrow { font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.75; font-weight: 700; }
+.bigweek { font-family: var(--display); font-weight: 800; font-size: 4.6em; line-height: 0.85; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.weekmeta { display: grid; gap: 0.2em; padding-bottom: 0.15em; }
+.weekmeta .range { font-family: var(--display); font-weight: 500; font-size: 1.4em; }
+.weekmeta .plan { font-weight: 700; font-size: 1.1em; }
+.weekmeta .party { opacity: 0.75; font-size: 0.92em; }
+.clock { text-align: right; font-variant-numeric: tabular-nums; }
+.clock .t { font-family: var(--display); font-weight: 700; font-size: 3.2em; line-height: 1; }
+.clock .d { opacity: 0.8; margin-top: 0.2em; font-size: 1.05em; }
+.days { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.15fr); gap: 0.6em; }
+.day { background: var(--surface); color: var(--fg); border-radius: 10px; padding: 0.7em 0.8em 0.8em; display: grid; align-content: start; gap: 0.45em; min-width: 0; position: relative; }
+.day .dn { display: flex; justify-content: space-between; align-items: baseline; gap: 0.4em; font-family: var(--display); font-weight: 700; font-size: 1em; }
+.day .dn span { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; }
+.ev { border-left: 4px solid var(--none-bar); padding: 0.4em 0.55em; border-radius: 3px 6px 6px 3px; font-weight: 700; font-size: 1.08em; overflow-wrap: anywhere; }
+.ev small { display: block; font-weight: 400; font-size: 0.72em; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.1em; }
+.ev.empty { font-weight: 400; opacity: 0.6; }
+.day.today { box-shadow: 0 0 0 3px var(--today); }
+.day.today::after { content: "I dag"; position: absolute; top: -0.7em; right: 0.7em; background: var(--today); color: var(--today-ink); font-size: 0.72em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.15em 0.6em; border-radius: 99px; }
+.day.past { opacity: 0.55; }
+
+.k-linje { background: var(--linje); color: var(--linje-ink); border-color: var(--linje-bar) !important; }
+.k-tur { background: var(--tur); color: var(--tur-ink); border-color: var(--tur-bar) !important; }
+.k-tun { background: var(--tun); color: var(--tun-ink); border-color: var(--tun-bar) !important; }
+.k-ferie { background: var(--ferie); color: var(--ferie-ink); border-color: var(--ferie-bar) !important; }
+.k-valfag { background: var(--valfag); color: var(--valfag-ink); border-color: var(--valfag-bar) !important; }
+.k- { background: var(--none); color: var(--none-ink); }
+
+/* Vekene som kjem */
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.4em 1.2em; }
+h2 { font-family: var(--display); font-weight: 800; font-size: 1.45em; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.9em; font-size: 0.85em; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 0.35em; }
+.legend i { width: 0.8em; height: 0.8em; border-radius: 3px; display: inline-block; }
+.board-wrap { overflow-x: auto; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.board { min-width: 760px; display: grid; grid-template-columns: 8.5em repeat(5, minmax(0, 1fr)) minmax(0, 1.1fr) minmax(0, 1.1fr); }
+.board > div { min-width: 0; }
+.bh { font-size: 0.72em; text-transform: uppercase; letter-spacing: 0.1em; color: var(--faint); font-weight: 700; padding: 0.9em 0.5em 0.6em; border-bottom: 1px solid var(--line); }
+.bw { padding: 0.6em 0.7em; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.bw .wn { font-family: var(--display); font-weight: 800; font-size: 1.6em; line-height: 0.95; }
+.bw .dt { color: var(--muted); font-size: 0.8em; margin-top: 0.2em; }
+.bw .pl { font-size: 0.78em; color: var(--muted); font-weight: 700; margin-top: 0.35em; overflow-wrap: anywhere; }
+.bc { padding: 4px 3px; border-bottom: 1px solid var(--line); display: flex; }
+.bc .c { flex: 1; border-radius: 6px; padding: 0.45em 0.6em; display: flex; align-items: center; overflow-wrap: anywhere; font-size: 0.95em; min-width: 0; }
+.bc .c.span { justify-content: center; text-align: center; font-weight: 700; }
+.board .last { border-bottom: 0; }
+
+/* Høgre kolonne */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1em 1.1em 1.1em; display: grid; gap: 0.8em; min-width: 0; }
+.panel h2 { font-size: 1.3em; }
+.duty { display: grid; gap: 0.45em; }
+.duty > div { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 0.2em 0.8em; background: var(--bg); border-radius: 8px; padding: 0.55em 0.75em; }
+.duty small { font-size: 0.74em; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.duty small i { display: block; font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--faint); font-size: 1.1em; margin-top: 0.1em; }
+.duty b { font-family: var(--display); font-weight: 700; font-size: 1.3em; text-align: right; overflow-wrap: anywhere; }
+.duty b.no { color: var(--faint); font-weight: 500; }
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19em), 1fr)); gap: 1.1em 1.4em; align-items: start; }
+.mod { display: grid; gap: 0.45em; }
+.mod-head { display: grid; gap: 0.15em; }
+.mod-head h3 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 1.15em; display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
+.mod-head .now { font-family: var(--body); font-size: 0.62em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--today); color: var(--today-ink); padding: 0.15em 0.6em; border-radius: 99px; }
+.mod-head .when { color: var(--muted); font-size: 0.88em; font-weight: 700; }
+.fag { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3em; }
+.fag li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8em; align-items: baseline; padding: 0.4em 0.65em; border-radius: 3px 7px 7px 3px; border-left: 4px solid var(--valfag-bar); background: var(--valfag); color: var(--valfag-ink); }
+.mod.pv .fag li { border-left-color: var(--tur-bar); background: var(--tur); color: var(--tur-ink); }
+.fag .f { font-weight: 700; overflow-wrap: anywhere; }
+.fag .f.tbd { font-weight: 400; font-style: italic; opacity: 0.8; }
+.fag .l { font-size: 0.92em; text-align: right; overflow-wrap: anywhere; }
+.nomods { color: var(--muted); margin: 0; }
+footer { color: var(--faint); font-size: 0.78em; }
+
+@media (max-width: 1100px) {
+  .screen { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .days { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bigweek { font-size: 3.4em; }
+  .clock { text-align: left; }
+}
+@media (max-width: 460px) { .days { grid-template-columns: minmax(0, 1fr); } body { font-size: 15px; } }
+</style>
+
+<div class="screen" id="screen">
+  <div class="main">
+    <section class="hero" aria-label="Denne veka">
+      <div class="hero-top">
+        <div class="weekline">
+          <div><div class="eyebrow" id="h-label">Denne veka</div><div class="bigweek" id="h-week"></div></div>
+          <div class="weekmeta"><div class="range" id="h-range"></div><div class="plan" id="h-plan"></div><div class="party" id="h-party"></div></div>
+        </div>
+        <div class="clock"><div class="t" id="clock-t"></div><div class="d" id="clock-d"></div></div>
+      </div>
+      <div class="days" id="days"></div>
+    </section>
+
+    <section aria-labelledby="next-title" style="display:grid;gap:0.7em">
+      <div class="sec-head">
+        <h2 id="next-title">Vekene som kjem</h2>
+        <div class="legend">
+          <span><i class="k-linje"></i>Linje</span>
+          <span><i class="k-tur"></i>Fellestur / prosjekt</span>
+          <span><i class="k-tun"></i>Felles på tunet</span>
+          <span><i class="k-valfag"></i>Valfag</span>
+          <span><i class="k-ferie"></i>Ferie</span>
+        </div>
+      </div>
+      <div class="board-wrap"><div class="board" id="board"></div></div>
+    </section>
+
+    <section class="panel" id="mods-panel" aria-labelledby="mods-title">
+      <h2 id="mods-title">Valfag og prosjekt</h2>
+      <div class="mods" id="mods"></div>
+    </section>
+  </div>
+
+  <aside class="side">
+    <section class="panel" aria-labelledby="duty-title">
+      <h2 id="duty-title">Vakter i dag</h2>
+      <div class="duty" id="duty"></div>
+    </section>
+    <footer>Henta frå arka SKULEÅRET, VALFAG PROSJEKT og TILSYNSLISTA 22.10.2026 kl. 14:41 · Nordfjord folkehøgskule</footer>
+  </aside>
+</div>
+
+<script>
+const WEEKS = [{"w":33,"mon":"2026-08-10","plan":"Distriksmøte","party":"","days":[{"t":"","k":""},{"t":"Oppstart for stipendiatar","k":""},{"t":"Leiargruppe - LG","k":""},{"t":"Distriktsmøte Sunnfjord","k":""},{"t":"Distriktsmøte Sunnfjord","k":""},{"t":"","k":""},{"t":"","k":""}]},{"w":34,"mon":"2026-08-17","plan":"Forarbeid og opningsfest","party":"","days":[{"t":"Forarbeidsdag - Felles","k":""},{"t":"Forarbeidsdag - Avdeling","k":""},{"t":"Forarbeidsdag - Avdeling","k":""},{"t":"Forarbeidsdag - Avdeling /Praktisk /Smørhamn","k":""},{"t":"LG","k":""},{"t":"Opningsfest Miljø 18-22","k":"tun"},{"t":"Søndag gapahuken Miljø 17-21","k":"tun"}]},{"w":35,"mon":"2026-08-24","plan":"Haugen","party":"Allsidig","days":[{"t":"Informasjon og omvisning, Teams, Foto","k":"tun"},{"t":"Linje","k":"tur"},{"t":"Haugen","k":"tur"},{"t":"Haugen","k":"tur"},{"t":"Info, vask og elevsam. Ped.møte 14-15","k":"tun"},{"t":"Førstehjelp","k":"tun"},{"t":"Karnilstunet Kosekasse m/stipp","k":"tun"}]},{"w":36,"mon":"2026-08-31","plan":"3d linje","party":"Ski og surf 1","days":[{"t":"Vask, allmøte, linje, telt og primus","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Felles praktisk førstehjelp","k":"tun"},{"t":"Okhaldunga","k":"tun"},{"t":"Internatkveld m/stipp","k":"tun"}]},{"w":37,"mon":"2026-09-07","plan":"3d linje","party":"KRIK","days":[{"t":"Tru og tanke - tema","k":"tun"},{"t":"Fellesdag - Fjelltur m/stipp","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Nordfjordryggen","k":"tun"},{"t":"Stippane","k":"tun"}]},{"w":38,"mon":"2026-09-14","plan":"Fellestur","party":"Ski og surf 2","days":[{"t":"Vask, allmøte, felles, brannøving","k":"tun"},{"t":"Flåm/Finse/Aurland","k":"tur"},{"t":"Flåm/Finse/Aurland","k":"tur"},{"t":"Flåm/Finse/Aurland","k":"tur"},{"t":"Flåm/Finse/Aurland","k":"tur"},{"t":"Matamål","k":"tun"},{"t":"Ski og surf 1","k":"tun"}]},{"w":39,"mon":"2026-09-21","plan":"5 d linje UTN Lofoten","party":"Sport","days":[{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Strandrydding","k":"tun"},{"t":"KRIK","k":"tun"}]},{"w":40,"mon":"2026-09-28","plan":"3d linje, UTN Lofoten","party":"Jakt og fiske","days":[{"t":"Tru og tanke - Julie Kvalevåg-Holm - Roseklubb","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Fellesdag til lunsj Bål - Ped 1230-1430","k":"tun"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"}]},{"w":41,"mon":"2026-10-05","plan":"Haustferie","party":"","days":[{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"},{"t":"Haustferie","k":"ferie"}]},{"w":42,"mon":"2026-10-12","plan":"KRIK+SS+Sport Biaritz, JF jakt","party":"Utforsk Norge","days":[{"t":"Valfag M1M","k":"valfag"},{"t":"Valfag M1T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Mat i det fri","k":"tun"},{"t":"Jakt og fiske","k":"tun"}]},{"w":43,"mon":"2026-10-19","plan":"KRIK+SS+Sport Biaritz, JF jakt","party":"Allsidig","days":[{"t":"Valfag M1M","k":"valfag"},{"t":"Valfag M1T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Orientering","k":"tun"},{"t":"Allsidig","k":"tun"}]},{"w":44,"mon":"2026-10-26","plan":"Prosjektveke 44/Møteveke","party":"Ski og surf 1","days":[{"t":"Tru og tanke - møteveke","k":"tun"},{"t":"Valfag M1T og M1Biaritz","k":"valfag"},{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Kokelagstur","k":"tun"},{"t":"Ski og surf 2","k":"tun"}]},{"w":45,"mon":"2026-11-02","plan":"Kokelagstur, Danielsen","party":"KRIK","days":[{"t":"Tema Okhaldunga","k":"tun"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Fri","k":"ferie"},{"t":"Frihelg","k":"ferie"},{"t":"Frihelg","k":"ferie"}]},{"w":46,"mon":"2026-11-09","plan":"Kokelagstur","party":"Jakt og fiske","days":[{"t":"Valfag M1M og M1Biaritz","k":"valfag"},{"t":"Sogndal","k":"tun"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Kokelagstur/linje","k":"linje"},{"t":"Bistandsløp","k":"tun"},{"t":"Sport","k":"tun"}]},{"w":47,"mon":"2026-11-16","plan":"Scenedagar","party":"Utforsk Norge","days":[{"t":"Valfag M1M og M1Biaritz","k":"valfag"},{"t":"Dugnad","k":"tun"},{"t":"Scenedager","k":"tur"},{"t":"Scenedagar","k":"tur"},{"t":"Scenedagar","k":"tur"},{"t":"Familiedag","k":"tun"},{"t":"Familiedag","k":"tun"}]},{"w":48,"mon":"2026-11-23","plan":"Prosjektveke 48","party":"KRIK","days":[{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Prosjektveke","k":"tur"},{"t":"Buldrekonkurranse","k":"tun"},{"t":"Internatkveld","k":"tun"}]},{"w":49,"mon":"2026-11-30","plan":"3d linje","party":"Ski og surf 2","days":[{"t":"Besøk frå NLA / Ped møte 1330-1500","k":"tun"},{"t":"Turneringsdag FIRDA","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Swingkurs","k":"tun"},{"t":"Swingkonkurranse Stippane","k":"tun"}]},{"w":50,"mon":"2026-12-07","plan":"Juleverkstad 2d linje Fotballcup","party":"Sport","days":[{"t":"Juletrim Nordvestcup Ålesund","k":"tun"},{"t":"Juleverkstad Nordvestcup Ålesund","k":"tun"},{"t":"Bistandsdag/Julehjelp","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Vinterfriluftsliv stipper","k":"tun"},{"t":"Internatkveld","k":"tun"}]},{"w":51,"mon":"2026-12-14","plan":"Julefest","party":"Ski og surf 1","days":[{"t":"Verda og vi / Ped.møte 1230-1400 - Elevsamtale","k":"tun"},{"t":"Elevsamtale/ Julefest 15. des","k":"tun"},{"t":"PR-VGS","k":"ferie"},{"t":"PR-VGS","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"}]},{"w":52,"mon":"2026-12-21","plan":"Juleferie","party":"","days":[{"t":"Juleferie","k":"ferie"},{"t":"Julaften","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"}]},{"w":53,"mon":"2026-12-28","plan":"Juleferie","party":"","days":[{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"Juleferie","k":"ferie"},{"t":"1. nyttårsdag","k":"ferie"},{"t":"","k":"ferie"},{"t":"","k":"ferie"}]},{"w":1,"mon":"2027-01-04","plan":"Skulestart 4. jan, skredkurs","party":"Utforsk Norge","days":[{"t":"Skredundervisning","k":"tun"},{"t":"Valfag M3T","k":"valfag"},{"t":"Praktisk skreddag Linjevis","k":"linje"},{"t":"Skredteori Gruppedelt","k":"tun"},{"t":"Praktisk skreddag Gruppedelt","k":"tun"},{"t":"Eva og Upscale","k":"tun"},{"t":"Utforsk Norge","k":"tun"}]},{"w":2,"mon":"2027-01-11","plan":"3d linje","party":"Ski og surf 1","days":[{"t":"Tru og tanke - tema","k":"tun"},{"t":"Valfag M3T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"KRIK Sentralt","k":"tun"},{"t":"Internatkveld","k":"tun"}]},{"w":3,"mon":"2027-01-18","plan":"Felles vintertur","party":"Ski","days":[{"t":"Telt, Mat, Primus nye kokelag","k":"tun"},{"t":"Valfag M3T","k":"valfag"},{"t":"Felles vintertur","k":"tur"},{"t":"Felles vintertur","k":"tur"},{"t":"Felles vintertur","k":"tur"},{"t":"Menneskeverd","k":"tun"},{"t":"KRIK","k":"tun"}]},{"w":4,"mon":"2027-01-25","plan":"Myrkdalen","party":"Frivillige","days":[{"t":"Skikurs","k":"tur"},{"t":"Skikurs","k":"tur"},{"t":"Skikurs","k":"tur"},{"t":"Skikurs","k":"tur"},{"t":"Skikurs","k":"tur"},{"t":"Årbok på dagtid","k":"tun"},{"t":"Ski og surf 1","k":"tun"}]},{"w":5,"mon":"2027-02-01","plan":"3d linje","party":"Allsidig","days":[{"t":"Valfag M2M","k":"valfag"},{"t":"Valfag M3T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Patagonia","k":"tun"},{"t":"Jakt og fiske","k":"tun"}]},{"w":6,"mon":"2027-02-08","plan":"3d linje","party":"Jakt og fiske","days":[{"t":"Valfag M2M","k":"valfag"},{"t":"Valfag M4T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Fjorårstreff","k":"tun"},{"t":"Fjorårstreff / internatkveld","k":"tun"}]},{"w":7,"mon":"2027-02-15","plan":"Diverse","party":"KRIK","days":[{"t":"Valfag M2M","k":"valfag"},{"t":"Valfag M4T -KK","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"PR-skidag","k":"tun"},{"t":"Friluftsliv Stip / Jegerp. - Ped 1230-1430","k":"tun"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"}]},{"w":8,"mon":"2027-02-22","plan":"Vinterferie","party":"","days":[{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"},{"t":"Vinterferie","k":"ferie"}]},{"w":9,"mon":"2027-03-01","plan":"3d linje - Ski og SS Kvitfjell","party":"Sport","days":[{"t":"Tru og tanke - tema","k":"tun"},{"t":"Valfag M4T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje/Kvitfjell","k":"linje"},{"t":"Kvitfjell 6.-7. mars / Slinning - bondeliv","k":"tun"},{"t":"Allsidig","k":"tun"}]},{"w":10,"mon":"2027-03-08","plan":"3d linje - KRIK Samling Hemsedal","party":"Utforsk Norge","days":[{"t":"Tru og tanke - tema","k":"tun"},{"t":"Valfag M4T","k":"valfag"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Personleg økonomi","k":"tun"},{"t":"Ski og surf 2","k":"tun"}]},{"w":11,"mon":"2027-03-15","plan":"Prosjektveke / spenningskurs","party":"Ski og surf 1","days":[{"t":"Prosjektveke 11 / Spenningskurs","k":"tur"},{"t":"Prosjektveke 11 / Spenningskurs","k":"tur"},{"t":"Prosjektveke 11 / Spenningskurs","k":"tur"},{"t":"Prosjektveke 11 / Spenningskurs","k":"tur"},{"t":"Prosjektveke 11 / Spenningskurs","k":"tur"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"}]},{"w":12,"mon":"2027-03-22","plan":"Påskeferie","party":"","days":[{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"},{"t":"Påskeferie","k":"ferie"}]},{"w":13,"mon":"2027-03-29","plan":"3d linje","party":"Allsidig","days":[{"t":"Påskeferie","k":"ferie"},{"t":"Tru og tanke - tema","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Shanty","k":"tun"},{"t":"Utforsk Norge","k":"tun"}]},{"w":14,"mon":"2027-04-05","plan":"Aleinenatt - Nordvestcup","party":"Ski og surf 2","days":[{"t":"Aleinenatt","k":"tun"},{"t":"Fellesdag","k":"tun"},{"t":"Fellestur","k":"tur"},{"t":"Aleinenatt","k":"tur"},{"t":"Aleinenatt","k":"tur"},{"t":"Oddfrid Skorpe Tennfjord?","k":"tun"},{"t":"Sport","k":"tun"}]},{"w":15,"mon":"2027-04-12","plan":"Lehmkuhl","party":"Jakt og fiske","days":[{"t":"Lehmkuhl","k":"tur"},{"t":"Lehmkuhl","k":"tur"},{"t":"Lehmkuhl","k":"tur"},{"t":"Lehmkuhl","k":"tur"},{"t":"Lehmkuhl","k":"tur"},{"t":"Erik Andreassen","k":"tun"},{"t":"Internatkveld","k":"tun"}]},{"w":16,"mon":"2027-04-19","plan":"3d linje","party":"Sport","days":[{"t":"Tru og tanke - tema","k":"tun"},{"t":"Dugnad","k":"tun"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Landsbylaurdag","k":"tun"},{"t":"Rægefest","k":"tun"}]},{"w":17,"mon":"2027-04-26","plan":"Linjeveke","party":"KRIK","days":[{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Linje","k":"linje"},{"t":"Breimstafett","k":"tun"},{"t":"Rollebryllup","k":"tun"}]},{"w":18,"mon":"2027-05-03","plan":"Pilgrimsvandring","party":"Utforsk Norge","days":[{"t":"Førebu pilgrim","k":"tun"},{"t":"Pilegrimsvandring","k":"tur"},{"t":"Pilegrimsvandring","k":"tur"},{"t":"Pilegrimsvandring/MiniFHS Kristi Himmel","k":"tur"},{"t":"Pakke og elevsamtaler","k":"tun"},{"t":"Avslutningsfest 8.mai","k":"tun"},{"t":"Grillkveld/ Årbokskriving","k":"tun"}]},{"w":19,"mon":"2027-05-10","plan":"Vask og reis","party":"Allsidig","days":[{"t":"Fellesvask","k":"tun"},{"t":"Vask elevrom - Linje- og internavsl.","k":"tun"},{"t":"Reise etter lunsj","k":"tun"},{"t":"","k":""},{"t":"Etterarbeidsdag","k":""},{"t":"","k":""},{"t":"","k":""}]},{"w":20,"mon":"2027-05-17","plan":"","party":"","days":[{"t":"2. pinsedag","k":"ferie"},{"t":"Etterarb. 830-15 felles 12-15 Personalsamling 15-17","k":""},{"t":"FHS-Festival","k":""},{"t":"FHS-Festival","k":""},{"t":"FHS-Festival","k":""},{"t":"","k":""},{"t":"","k":""}]}];
+const VF = {"M1M":{"title":"Valfag M1M","pv":false,"note":"4 måndagar for Allsidig, Ski, Jakt og fiske, Utforsk Norge og Bu og fritid. Stippar vel òg, sidan nokre er i Biarritz.","subs":[{"f":"Buldring","l":["EA"],"n":17,"max":16,"p":0},{"f":"Terrengsykkel","l":["PM"],"n":14,"max":16,"p":750},{"f":"Foto","l":["JH"],"n":8,"max":16,"p":0},{"f":"Heilt naturleg","l":["MRS"],"n":13,"max":16,"p":200}],"extra":["Ordets skole","Hybelkokken"]},"M1T":{"title":"Valfag M1T","pv":false,"note":"3 tysdagar for Allsidig, Ski, Jakt og fiske og Utforsk Norge. Stippar vel òg, sidan nokre er i Biarritz.","subs":[{"f":"Klatring","l":["JH"],"n":15,"max":16,"p":100},{"f":"Sløyd / turkopp","l":["MRS"],"n":14,"max":16,"p":0},{"f":"Keramikk","l":["YBT"],"n":6,"max":16,"p":"Forbruk"},{"f":"Mat i det fri","l":["LM"],"n":17,"max":20,"p":300}]},"M1Biaritz":{"title":"Valfag M1 Biarritz","pv":false,"note":"2 måndagar og ein tysdag for Ski og surf, KRIK og Sport. Stippar vel òg (ikkje stippeundervisning).","subs":[{"f":"Kajakk våtkort","l":["EKN"],"n":16,"max":16,"p":200},{"f":"Volleyball og padel","l":["SAV","SHS"],"n":32,"max":32,"p":400,"sub":"To grupper"},{"f":"Stipp","l":["HS"],"n":null,"max":12}],"extra":["Frisbee","Fjell og bibel"]},"PV44":{"title":"Prosjektveke 44","pv":true,"note":"Onsdag til fredag.","subs":[{"f":"Elvepadling","l":[],"n":13,"max":12,"p":1800},{"f":"Trad-klatring","l":["EA"],"n":16,"max":16,"p":1200},{"f":"Golf","l":["LAH"],"n":11,"max":null,"p":1700},{"f":"Terrengsykkel","l":["JH"],"n":10,"max":16,"p":750},{"f":"Steinsliping","l":["MRS"],"n":9,"max":12,"p":"Forbruk"},{"f":"Keramikk","l":["YBT"],"n":18,"max":16},{"f":"Båtførarprøve","l":["EKN"],"n":17,"max":25},{"f":"Motorsagkurs","l":[],"n":12,"max":12,"sub":"4 dagar, onsdag til laurdag"}]},"PV48":{"title":"Prosjektveke 48","pv":true,"note":"Måndag til fredag.","subs":[{"f":"Jaktveke i Høyanger","l":["PM"],"n":18,"max":13},{"f":"Fridykking","l":["Ekstern"],"n":22,"max":30},{"f":"Klatreveke","l":["JH"],"n":11,"max":16},{"f":"Sport og spel","l":["LAH"],"n":12,"max":16},{"f":"Keramikk","l":["YBT"],"n":null,"max":null},{"f":"Bibel og surf","l":["SHS","SAV"],"n":31,"max":32,"sub":"To grupper"},{"f":"Julebakst og tradisjonsmat","l":["MRS"],"n":12,"max":16}]},"M3T":{"title":"Valfag M3T","pv":false,"note":"4 tysdagar.","subs":[{"f":"Jegerprøve","l":["PM"],"n":null,"max":25},{"f":"Topptur","l":["JH"],"n":null,"max":16},{"f":"Topptur / Fjordium","l":["LAH"],"n":null,"max":16},{"f":"Sløyd","l":["MRS"],"n":null,"max":16},{"f":"Keramikk","l":["YBT"],"n":null,"max":16},{"f":"Topptur / bibel","l":["SHS"],"n":null,"max":16},{"f":"Stipp","l":["HS"],"n":12,"max":12}]},"M2M":{"title":"Valfag M2M","pv":false,"note":"3 måndagar.","subs":[{"f":"KRIK-trening / styrketrening","l":["EA"],"n":null,"max":16},{"f":"Foto / buldring","l":["JH"],"n":null,"max":16},{"f":"Uthald og langrenn","l":["LAH"],"n":null,"max":16},{"f":"Ordets skole","l":["EKN"],"n":null,"max":24},{"f":null,"l":["MRS"],"n":null,"max":16},{"f":null,"l":["SAV"],"n":null,"max":16},{"f":null,"l":["BH"],"n":null,"max":null},{"f":"Stipp","l":["YBT","LM"],"n":12,"max":12}]},"M4T":{"title":"Valfag M4T","pv":false,"note":"4 tysdagar.","subs":[{"f":"Topptur","l":["JH"],"n":null,"max":20},{"f":"Langrenn / topptur","l":["LAH"],"n":null,"max":16},{"f":"Topptur","l":["SAV"],"n":null,"max":20},{"f":"Topptur","l":["EKN"],"n":null,"max":20},{"f":"Steinsliping","l":["MRS"],"n":null,"max":12},{"f":"Keramikk","l":["YBT"],"n":null,"max":15}],"extra":["Mat i det fri","Havkajakk","Stipp i praksis"]},"PV11":{"title":"Prosjektveke 11","pv":true,"note":"Måndag til fredag, saman med spenningskurs.","subs":[{"f":null,"l":["EKN"],"n":null,"max":16},{"f":null,"l":["JH"],"n":null,"max":16},{"f":"Sløyd","l":["MRS"],"n":null,"max":15},{"f":"Keramikk","l":["YBT"],"n":null,"max":16},{"f":"Spenningskurs","l":["LM"],"n":null,"max":5},{"f":"Spenningskurs","l":["LAH"],"n":null,"max":45}],"extra":["Bohuslän?"]}};
+const TS = {"2026-08-21":{"t":"Kristina","n":"Kristina"},"2026-08-22":{"t":"Erlend","n":"Erlend"},"2026-08-23":{"n":"Bodil"},"2026-08-24":{"o":"Steinar","t":"Yngvild","n":"Hedda"},"2026-08-25":{"o":"Lars Anders","t":"Inger Johanne","n":"Oda Sofie"},"2026-08-27":{"t":"Bodil","n":"Hedda"},"2026-08-28":{"o":"Erlend","t":"Steinar","n":"Steinar"},"2026-08-29":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-08-30":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-08-31":{"o":"Hedda","t":"Yngvild","n":"Oda Sofie"},"2026-09-01":{"o":"Oda Sofie","t":"Kristina","n":"Oda Sofie"},"2026-09-02":{"t":"Kristina","n":"Oda Sofie"},"2026-09-03":{"t":"Bodil","n":"Oda Sofie"},"2026-09-04":{"o":"Håkon","t":"Synne","n":"Kristina"},"2026-09-05":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2026-09-06":{"t":"Kristina","n":"Hedda"},"2026-09-07":{"o":"Synne","t":"Yngvild","n":"Hedda"},"2026-09-08":{"o":"Per","t":"Inger Johanne","n":"Hedda"},"2026-09-09":{"o":"Yngvild","t":"Kristina","n":"Hedda"},"2026-09-10":{"t":"Bodil","n":"Hedda"},"2026-09-11":{"t":"Grethe","n":"Synne"},"2026-09-12":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2026-09-13":{"t":"Bodil","n":"Hedda"},"2026-09-14":{"o":"Else","t":"Yngvild","n":"Hedda"},"2026-09-18":{"t":"Lars Anders","n":"Lars Anders"},"2026-09-19":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2026-09-20":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-09-21":{"o":"Eivind","t":"Yngvild","n":"Oda Sofie"},"2026-09-22":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-09-23":{"n":"Oda Sofie"},"2026-09-24":{"t":"Bodil","n":"Oda Sofie"},"2026-09-25":{"t":"Erlend","n":"Erlend"},"2026-09-26":{"o":"Tilsynslærar","t":"Steinar","n":"Steinar"},"2026-09-27":{"t":"Bodil","n":"Hedda"},"2026-09-28":{"o":"Ole","t":"Yngvild","n":"Hedda"},"2026-09-29":{"o":"Inger Johanne","t":"Inger Johanne","n":"Hedda"},"2026-09-30":{"t":"Kristina","n":"Hedda"},"2026-10-01":{"t":"Bodil","n":"Hedda"},"2026-10-02":{"o":"Synne","t":"Grethe","n":"Bakvakt"},"2026-10-11":{"t":"Kristina","n":"Oda Sofie"},"2026-10-12":{"o":"Grethe","t":"Yngvild","n":"Oda Sofie"},"2026-10-13":{"o":"Olav","t":"Inger Johanne","n":"Oda Sofie"},"2026-10-14":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2026-10-15":{"n":"Oda Sofie"},"2026-10-16":{"t":"Håkon","n":"Håkon"},"2026-10-17":{"o":"Tilsynslærar","t":"Lisbeth","n":"Lisbeth"},"2026-10-18":{"t":"Inger Johanne","n":"Hedda"},"2026-10-19":{"o":"Jan","t":"Yngvild","n":"Hedda"},"2026-10-20":{"o":"Runa","t":"Inger Johanne","n":"Hedda"},"2026-10-21":{"t":"Kristina","n":"Hedda"},"2026-10-22":{"t":"Grethe","n":"Hedda"},"2026-10-23":{"t":"Jan","n":"Jan"},"2026-10-24":{"o":"Tilsynslærar","t":"Eivind","n":"Eivind"},"2026-10-25":{"t":"Bodil","n":"Oda Sofie"},"2026-10-26":{"o":"Lisbeth","t":"Yngvild","n":"Oda Sofie"},"2026-10-27":{"o":"Karolina","t":"Inger Johanne","n":"Oda Sofie"},"2026-10-28":{"o":"Leah","t":"Kristina","n":"Oda Sofie"},"2026-10-29":{"o":"Hildegunn","t":"Bodil","n":"Oda Sofie"},"2026-10-30":{"o":"Eivind","t":"Grethe","n":"Erlend"},"2026-10-31":{"o":"Tilsynslærar","t":"Erlend","n":"Erlend"},"2026-11-01":{"t":"Kristina","n":"Hedda"},"2026-11-02":{"o":"Ole","t":"Yngvild","n":"Hedda"},"2026-11-03":{"o":"Selma","t":"Grethe","n":"Hedda"},"2026-11-04":{"t":"Kristina","n":"Hedda"},"2026-11-05":{"t":"Bodil","n":"Hedda"},"2026-11-06":{"o":"Leander","t":"Erlend","n":"Erlend"},"2026-11-07":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2026-11-08":{"t":"Kristina","n":"Kristina"},"2026-11-09":{"o":"Kristina","t":"Yngvild","n":"Yngvild"},"2026-11-10":{"o":"Marie Elise","t":"Inger Johanne","n":"Inger Johanne"},"2026-11-11":{"o":"Orvar","t":"Eivind","n":"Eivind"},"2026-11-12":{"t":"Bodil","n":"Bodil"},"2026-11-13":{"t":"Synne","n":"Synne"},"2026-11-14":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2026-11-15":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-11-16":{"o":"Else","t":"Yngvild","n":"Oda Sofie"},"2026-11-17":{"o":"Andrea","t":"Inger Johanne","n":"Oda Sofie"},"2026-11-18":{"o":"Håvard","t":"Kristina","n":"Oda Sofie"},"2026-11-19":{"o":"Torill","t":"Bodil","n":"Oda Sofie"},"2026-11-20":{"o":"Maria","t":"Grethe","n":"Håkon"},"2026-11-21":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-11-22":{"t":"Kristina","n":"Hedda"},"2026-11-23":{"o":"Per","t":"Yngvild","n":"Hedda"},"2026-11-24":{"o":"Hedda","t":"Inger Johanne","n":"Hedda"},"2026-11-25":{"o":"Yngvild","t":"Kristina","n":"Hedda"},"2026-11-26":{"o":"Bodil","t":"Bodil","n":"Hedda"},"2026-11-27":{"o":"Grethe","t":"Jan","n":"Jan"},"2026-11-28":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-11-29":{"t":"Bodil","n":"Oda Sofie"},"2026-11-30":{"o":"Oda Sofie","t":"Yngvild","n":"Oda Sofie"},"2026-12-01":{"o":"Steinar","t":"Inger Johanne","n":"Oda Sofie"},"2026-12-02":{"o":"Håkon","t":"Kristina","n":"Oda Sofie"},"2026-12-03":{"t":"Bodil","n":"Oda Sofie"},"2026-12-04":{"t":"Lars Anders","n":"Lars Anders"},"2026-12-05":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2026-12-06":{"t":"Inger Johanne","n":"Hedda"},"2026-12-07":{"o":"Yngvild","t":"Yngvild","n":"Hedda"},"2026-12-08":{"o":"Jan","t":"Inger Johanne","n":"Hedda"},"2026-12-09":{"o":"Hildegunn","t":"Kristina","n":"Hedda"},"2026-12-10":{"o":"Erlend","t":"Bodil","n":"Hedda"},"2026-12-11":{"t":"Grethe","n":"Kristina"},"2026-12-12":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2026-12-13":{"t":"Bodil","n":"Oda Sofie"},"2026-12-14":{"o":"Maria","t":"Yngvild","n":"Oda Sofie"},"2026-12-15":{"t":"Inger Johanne","n":"Oda Sofie"},"2027-01-03":{"t":"Bodil","n":"Bodil"},"2027-01-04":{"o":"Ole Martin","t":"Yngvild","n":"Yngvild"},"2027-01-05":{"o":"Leah","t":"Inger Johanne","n":"Inger Johanne"},"2027-01-06":{"o":"Orvar","t":"Kristina","n":"Kristina"},"2027-01-07":{"t":"Bodil","n":"Bodil"},"2027-01-08":{"t":"Håkon","n":"Håkon"},"2027-01-09":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-01-10":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-01-11":{"t":"Yngvild","n":"Yngvild"},"2027-01-12":{"o":"Runa","t":"Inger Johanne","n":"Inger Johanne"},"2027-01-13":{"o":"Magnus","t":"Kristina","n":"Kristina"},"2027-01-14":{"t":"Bodil","n":"Bodil"},"2027-01-15":{"t":"Grethe","n":"Kristina"},"2027-01-16":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2027-01-17":{"t":"Kristina","n":"Hedda"},"2027-01-18":{"o":"Hedda","t":"Yngvild","n":"Hedda"},"2027-01-19":{"o":"Karolina","t":"Inger Johanne","n":"Hedda"},"2027-01-20":{"o":"Olav","t":"Kristina","n":"Hedda"},"2027-01-21":{"t":"Bodil","n":"Hedda"},"2027-01-22":{"t":"Grethe","n":"Steinar"},"2027-01-23":{"o":"Tilsynslærar","t":"Steinar","n":"Steinar"},"2027-01-24":{"t":"Bodil","n":"Oda Sofie"},"2027-01-25":{"o":"Synne"},"2027-01-29":{"t":"Lars Anders","n":"Lars Anders"},"2027-01-30":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-01-31":{"t":"Inger Johanne","n":"Hedda"},"2027-02-01":{"o":"Oda Sofie","t":"Yngvild","n":"Hedda"},"2027-02-02":{"o":"Selma","t":"Inger Johanne","n":"Hedda"},"2027-02-03":{"o":"Leander","t":"Kristina","n":"Hedda"},"2027-02-04":{"t":"Bodil","n":"Hedda"},"2027-02-05":{"t":"Grethe","n":"Erlend"},"2027-02-06":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-02-07":{"t":"Kristina","n":"Oda Sofie"},"2027-02-08":{"o":"Per","t":"Yngvild","n":"Oda Sofie"},"2027-02-09":{"o":"Marie Elise","t":"Inger Johanne","n":"Oda Sofie"},"2027-02-10":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2027-02-11":{"t":"Bodil","n":"Oda Sofie"},"2027-02-12":{"t":"Grethe","n":"Jan"},"2027-02-13":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-02-14":{"t":"Bodil","n":"Hedda"},"2027-02-15":{"o":"Inger Johanne","t":"Yngvild","n":"Hedda"},"2027-02-16":{"o":"Andrea","t":"Inger Johanne","n":"Hedda"},"2027-02-17":{"o":"Håvard","t":"Kristina","n":"Hedda"},"2027-02-18":{"o":"Bodil","t":"Bodil","n":"Hedda"},"2027-02-19":{"o":"Ole Martin","t":"Kristina","n":"Kristina"},"2027-02-28":{"t":"Kristina","n":"Kristina"},"2027-03-01":{"o":"Oda Sofie","t":"Yngvild","n":"Yngvild"},"2027-03-02":{"o":"Leah","t":"Inger Johanne","n":"Inger Johanne"},"2027-03-03":{"o":"Orvar","t":"Kristina","n":"Kristina"},"2027-03-04":{"t":"Bodil","n":"Bodil"},"2027-03-05":{"t":"Jan","n":"Jan"},"2027-03-06":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2027-03-07":{"t":"Inger Johanne","n":"Oda Sofie"},"2027-03-08":{"o":"Yngvild","t":"Yngvild","n":"Oda Sofie"},"2027-03-09":{"o":"Runa","t":"Inger Johanne","n":"Oda Sofie"},"2027-03-10":{"o":"Magnus","t":"Kristina","n":"Oda Sofie"},"2027-03-11":{"t":"Bodil","n":"Oda Sofie"},"2027-03-12":{"t":"Håkon","n":"Håkon"},"2027-03-13":{"o":"Tilsynslærar","t":"Eivind","n":"Eivind"},"2027-03-14":{"t":"Bodil","n":"Hedda"},"2027-03-15":{"o":"Hedda","t":"Yngvild","n":"Hedda"},"2027-03-16":{"o":"Karolina","t":"Inger Johanne","n":"Hedda"},"2027-03-17":{"o":"Olav","t":"Jan","n":"Hedda"},"2027-03-18":{"o":"Maria","t":"Bodil","n":"Hedda"},"2027-03-19":{"o":"Eivind","t":"Grethe","n":"Bakvakt"},"2027-03-29":{"t":"Yngvild","n":"Yngvild"},"2027-03-30":{"o":"Kristina","t":"Inger Johanne","n":"Hedda"},"2027-03-31":{"o":"Selma","t":"Kristina","n":"Hedda"},"2027-04-01":{"t":"Bodil","n":"Hedda"},"2027-04-02":{"t":"Grethe","n":"Kristina"},"2027-04-03":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2027-04-04":{"t":"Kristina","n":"Oda Sofie"},"2027-04-05":{"o":"Jan","t":"Yngvild","n":"Oda Sofie"},"2027-04-06":{"o":"Marie Elise","t":"Inger Johanne","n":"Oda Sofie"},"2027-04-07":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2027-04-08":{"t":"Grethe","n":"Oda Sofie"},"2027-04-09":{"t":"Synne","n":"Synne"},"2027-04-10":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2027-04-11":{"t":"Inger Johanne","n":"Hedda"},"2027-04-12":{"o":"Leander"},"2027-04-16":{"t":"Jan","n":"Jan"},"2027-04-17":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-04-18":{"t":"Bodil","n":"Oda Sofie"},"2027-04-19":{"o":"Lars Anders","t":"Yngvild","n":"Oda Sofie"},"2027-04-20":{"o":"Andrea","t":"Inger Johanne","n":"Oda Sofie"},"2027-04-21":{"o":"Håvard","t":"Kristina","n":"Oda Sofie"},"2027-04-22":{"t":"Bodil","n":"Oda Sofie"},"2027-04-23":{"t":"Grethe","n":"Lars Anders"},"2027-04-24":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-04-25":{"t":"Kristina","n":"Kristina"},"2027-04-26":{"o":"Steinar","t":"Yngvild","n":"Yngvild"},"2027-04-27":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-04-28":{"t":"Kristina","n":"Kristina"},"2027-04-29":{"t":"Bodil","n":"Bodil"},"2027-04-30":{"t":"Steinar","n":"Steinar"},"2027-05-01":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2027-05-02":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-05-03":{"o":"Oda Sofie","t":"Yngvild","n":"Hedda"},"2027-05-04":{"o":"Lisbeth"},"2027-05-06":{"t":"Bodil","n":"Oda Sofie"},"2027-05-07":{"o":"Erlend","t":"Synne","n":"Synne"},"2027-05-08":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2027-05-09":{"t":"Bodil","n":"Oda Sofie"},"2027-05-10":{"o":"Maria","t":"Yngvild","n":"Oda Sofie"},"2027-05-11":{"o":"Håkon","t":"Inger Johanne","n":"Oda Sofie"},"2027-05-12":{"o":"Hedda"}};
+const NAMES = {"EA":"Erlend","PM":"Per","JH":"Jan","MRS":"Maria","YBT":"Yngvild","LM":"Lisbeth","EKN":"Eivind","SAV":"Synne","SHS":"Steinar","HS":"Håkon","LAH":"Lars Anders","BH":"Bodil"};  // lærarinitialar -> fornamn
+const AHEAD = 3;          // tal på veker under denne veka
+
+const MON = ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"];
+const DAYN = ["Måndag", "Tysdag", "Onsdag", "Torsdag", "Fredag", "Laurdag"];
+const DAYL = ["søndag", "måndag", "tysdag", "onsdag", "torsdag", "fredag", "laurdag"];
+const DSHORT = ["må", "ty", "on", "to", "fr"];
+const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function range(mon) {
+  const a = parse(mon), b = addDays(a, 6);
+  return a.getMonth() === b.getMonth() ? `${a.getDate()}.–${b.getDate()}. ${MON[b.getMonth()]}`
+    : `${a.getDate()}. ${MON[a.getMonth()]} – ${b.getDate()}. ${MON[b.getMonth()]}`;
+}
+// Kva valfagmodular / prosjektveker ein celle i arket viser til (same regel som hovudsida).
+function groupsFor(week, d) {
+  const keys = [];
+  if (!d || !d.t) return keys;
+  if (d.k === "valfag") (d.t.match(/M\d+(?:Biaritz|M|T)/gi) || []).forEach(m => {
+    const k = Object.keys(VF).find(x => x.toLowerCase() === m.toLowerCase());
+    if (k && !keys.includes(k)) keys.push(k);
+  });
+  if (/prosjektveke/i.test(d.t) && VF["PV" + week.w]) keys.push("PV" + week.w);
+  return keys;
+}
+function spans(days) {
+  const out = [];
+  days.forEach((d, i) => {
+    const prev = out[out.length - 1];
+    const sameBlock = (i <= 4) === (prev && prev.start <= 4) || d.k === "ferie";
+    if (prev && d.t && d.t === prev.t && d.k === prev.k && sameBlock) prev.n++;
+    else out.push({ ...d, start: i, n: 1 });
+  });
+  return out;
+}
+const $ = id => document.getElementById(id);
+
+function currentIdx(now) {
+  const today = startOfDay(now);
+  let idx = WEEKS.findIndex(w => today >= parse(w.mon) && today < addDays(parse(w.mon), 7));
+  let label = "Denne veka";
+  if (idx >= 0 && now.getDay() === 0 && idx + 1 < WEEKS.length) { idx++; label = "Neste veke"; }
+  if (idx < 0) { idx = WEEKS.findIndex(w => parse(w.mon) > today); label = "Neste skuleveke"; }
+  return { idx, label };
+}
+
+function hero(now, idx, label) {
+  const today = startOfDay(now), w = WEEKS[idx];
+  if (!w) { $("h-week").textContent = "–"; $("h-range").textContent = "Skuleåret er ferdig"; $("days").innerHTML = ""; return; }
+  $("h-label").textContent = label;
+  $("h-week").textContent = w.w;
+  $("h-range").textContent = range(w.mon);
+  $("h-plan").textContent = w.plan;
+  $("h-party").textContent = w.party ? "Oppvask: " + w.party : "";
+  const mon = parse(w.mon);
+  $("days").innerHTML = DAYN.map((name, i) => {
+    const date = addDays(mon, i);
+    const cls = +date === +today ? "today" : date < today ? "past" : "";
+    const evs = i < 5 ? [w.days[i]] : [{ ...w.days[5], lbl: "Seminar" }, { ...w.days[6], lbl: "Elevkveld" }];
+    const body = evs.filter(e => e.t).map(e => `<div class="ev k-${e.k}">${e.lbl ? `<small>${e.lbl}</small>` : ""}${esc(e.t)}</div>`).join("")
+      || `<div class="ev k- empty">Ingenting ført opp</div>`;
+    return `<div class="day ${cls}"><div class="dn">${name}<span>${date.getDate()}. ${MON[date.getMonth()]}</span></div>${body}</div>`;
+  }).join("");
+}
+
+function board(idx) {
+  const list = WEEKS.slice(idx + 1, idx + 1 + AHEAD);
+  const head = ["Veke", "Måndag", "Tysdag", "Onsdag", "Torsdag", "Fredag", "Lau. seminar", "Lau. elevkveld"].map(h => `<div class="bh">${h}</div>`).join("");
+  $("next-title").textContent = list.length ? "Vekene som kjem" : "Ingen fleire veker i år";
+  $("board").innerHTML = list.length ? head + list.map((w, k) => {
+    const last = k === list.length - 1 ? " last" : "";
+    return `<div class="bw${last}"><div class="wn">${w.w}</div><div class="dt">${range(w.mon)}</div>${w.plan ? `<div class="pl">${esc(w.plan)}</div>` : ""}</div>` +
+      spans(w.days).map(s => `<div class="bc${last}" style="grid-column:span ${s.n}">${s.t ? `<div class="c ${s.n > 1 ? "span " : ""}k-${s.k}">${esc(s.t)}</div>` : ""}</div>`).join("");
+  }).join("") : "";
+}
+
+function duty(now) {
+  const d = startOfDay(now), ts = TS[iso(d)] || {}, wk = d.getDay() === 0 || d.getDay() === 6;
+  const row = (lbl, time, v) => `<div><small>${lbl}${time ? `<i>${time}</i>` : ""}</small>${v ? `<b>${esc(v)}</b>` : `<b class="no">–</b>`}</div>`;
+  $("duty").innerHTML = row("Ord for dagen", "", ts.o) + row("Tilsyn", wk ? "08.30–22.30" : "15.30–22.30", ts.t) + row("Nattevakt", "22.30–08.30", ts.n);
+}
+
+// Modular som går denne veka eller dei næraste vekene, med dagane dei går.
+function mods(now, idx) {
+  const today = startOfDay(now), found = {}, order = [];
+  WEEKS.slice(Math.max(idx, 0), idx + 1 + AHEAD).forEach(w => w.days.slice(0, 5).forEach((d, i) => groupsFor(w, d).forEach(k => {
+    const date = addDays(parse(w.mon), i);
+    if (date < today) return;
+    if (!found[k]) { found[k] = []; order.push(k); }
+    found[k].push({ w, i, date });
+  })));
+  const panel = $("mods-panel");
+  panel.hidden = !order.length;
+  $("mods").innerHTML = order.map(k => {
+    const g = VF[k], hits = found[k];
+    const isNow = hits.some(h => WEEKS.indexOf(h.w) === idx);
+    const byWeek = [];
+    hits.forEach(h => { const last = byWeek[byWeek.length - 1]; if (last && last.w === h.w) last.is.push(h.i); else byWeek.push({ w: h.w, is: [h.i] }); });
+    const when = byWeek.map(b => {
+      const is = b.is, run = is.length > 1 && is[is.length - 1] - is[0] === is.length - 1;
+      return `veke ${b.w.w}: ${run ? DSHORT[is[0]] + "–" + DSHORT[is[is.length - 1]] : is.map(i => DSHORT[i]).join(", ")}`;
+    }).join(" · ");
+    const subs = g.subs.map(s => {
+      const who = s.l.map(x => NAMES[x] || x).join(" og ") || "Lærar ikkje sett";
+      return `<li><span class="f${s.f ? "" : " tbd"}">${s.f ? esc(s.f) : "Fag ikkje sett"}</span><span class="l">${esc(who)}</span></li>`;
+    }).join("");
+    return `<section class="mod${g.pv ? " pv" : ""}"><div class="mod-head"><h3>${esc(g.title)}${isNow ? `<span class="now">Denne veka</span>` : ""}</h3>` +
+      `<div class="when">${esc(when[0].toUpperCase() + when.slice(1))}</div></div><ul class="fag">${subs}</ul></section>`;
+  }).join("");
+}
+
+function tick() {
+  const now = new Date();
+  $("clock-t").textContent = now.toLocaleTimeString("nn-NO", { hour: "2-digit", minute: "2-digit" });
+  const d = DAYL[now.getDay()];
+  $("clock-d").textContent = `${d[0].toUpperCase() + d.slice(1)} ${now.getDate()}. ${MON[now.getMonth()]} ${now.getFullYear()}`;
+}
+let lastDay = "";
+function render() {
+  const now = new Date(), { idx, label } = currentIdx(now);
+  tick(); hero(now, idx, label); board(idx); duty(now); mods(now, idx);
+  lastDay = now.toDateString();
+}
+render();
+// Klokka går kvart 15. sekund; ved ny dag blir heile skjermen teikna på nytt.
+setInterval(() => { new Date().toDateString() === lastDay ? tick() : render(); }, 15000);
+// Hald skjermen vaken der nettlesaren tillèt det.
+async function wake() { try { if (document.visibilityState === "visible" && navigator.wakeLock) await navigator.wakeLock.request("screen"); } catch (e) {} }
+wake(); document.addEventListener("visibilitychange", wake);
+</script>
+
+</body></html>
