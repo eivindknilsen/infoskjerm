@@ -37,9 +37,9 @@
   --valfag: #392625; --valfag-ink: #efc3bf; --valfag-bar: #c98a84;
   --none: #1b2623; --none-ink: #c9d5d0; --none-bar: #4a5a54; color-scheme: dark }
 
-html, body { height: 100%; }
-body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: clamp(14px, 1vw, 26px); line-height: 1.25; }
-.screen { min-height: 100%; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 19em); gap: 1.1em;
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: var(--fs, 16px); line-height: 1.25; }
+.screen { min-height: 100%; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 23em); gap: 1.1em;
   padding-block: 1.1em; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .main, .side { display: grid; gap: 1.1em; align-content: start; min-width: 0; }
 
@@ -102,14 +102,14 @@ h2 { font-family: var(--display); font-weight: 800; font-size: 1.45em; margin: 0
 .duty small i { display: block; font-style: normal; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--faint); font-size: 1.1em; margin-top: 0.1em; }
 .duty b { font-family: var(--display); font-weight: 700; font-size: 1.3em; text-align: right; overflow-wrap: anywhere; }
 .duty b.no { color: var(--faint); font-weight: 500; }
-.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19em), 1fr)); gap: 1.1em 1.4em; align-items: start; }
+.mods { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.9em; align-items: start; }
 .mod { display: grid; gap: 0.45em; }
 .mod-head { display: grid; gap: 0.15em; }
 .mod-head h3 { margin: 0; font-family: var(--display); font-weight: 800; font-size: 1.15em; display: flex; align-items: center; gap: 0.5em; flex-wrap: wrap; }
 .mod-head .now { font-family: var(--body); font-size: 0.62em; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; background: var(--today); color: var(--today-ink); padding: 0.15em 0.6em; border-radius: 99px; }
 .mod-head .when { color: var(--muted); font-size: 0.88em; font-weight: 700; }
-.fag { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3em; }
-.fag li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8em; align-items: baseline; padding: 0.4em 0.65em; border-radius: 3px 7px 7px 3px; border-left: 4px solid var(--valfag-bar); background: var(--valfag); color: var(--valfag-ink); }
+.fag { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.22em; }
+.fag li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8em; align-items: baseline; padding: 0.28em 0.65em; border-radius: 3px 7px 7px 3px; border-left: 4px solid var(--valfag-bar); background: var(--valfag); color: var(--valfag-ink); }
 .mod.pv .fag li { border-left-color: var(--tur-bar); background: var(--tur); color: var(--tur-ink); }
 .fag .f { font-weight: 700; overflow-wrap: anywhere; }
 .fag .f.tbd { font-weight: 400; font-style: italic; opacity: 0.8; }
@@ -117,7 +117,7 @@ h2 { font-family: var(--display); font-weight: 800; font-size: 1.45em; margin: 0
 .nomods { color: var(--muted); margin: 0; }
 footer { color: var(--faint); font-size: 0.78em; }
 
-@media (max-width: 1100px) {
+@media (max-width: 760px) {
   .screen { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 900px) {
@@ -155,16 +155,16 @@ footer { color: var(--faint); font-size: 0.78em; }
       <div class="board-wrap"><div class="board" id="board"></div></div>
     </section>
 
-    <section class="panel" id="mods-panel" aria-labelledby="mods-title">
-      <h2 id="mods-title">Valfag og prosjekt</h2>
-      <div class="mods" id="mods"></div>
-    </section>
   </div>
 
   <aside class="side">
     <section class="panel" aria-labelledby="duty-title">
       <h2 id="duty-title">Vakter i dag</h2>
       <div class="duty" id="duty"></div>
+    </section>
+    <section class="panel" id="mods-panel" aria-labelledby="mods-title">
+      <h2 id="mods-title">Valfag og prosjekt</h2>
+      <div class="mods" id="mods"></div>
     </section>
     <footer>Henta frå arka SKULEÅRET, VALFAG PROSJEKT og TILSYNSLISTA 22.10.2026 kl. 14:41 · Nordfjord folkehøgskule</footer>
   </aside>
@@ -175,7 +175,9 @@ const WEEKS = [{"w":33,"mon":"2026-08-10","plan":"Distriksmøte","party":"","day
 const VF = {"M1M":{"title":"Valfag M1M","pv":false,"note":"4 måndagar for Allsidig, Ski, Jakt og fiske, Utforsk Norge og Bu og fritid. Stippar vel òg, sidan nokre er i Biarritz.","subs":[{"f":"Buldring","l":["EA"],"n":17,"max":16,"p":0},{"f":"Terrengsykkel","l":["PM"],"n":14,"max":16,"p":750},{"f":"Foto","l":["JH"],"n":8,"max":16,"p":0},{"f":"Heilt naturleg","l":["MRS"],"n":13,"max":16,"p":200}],"extra":["Ordets skole","Hybelkokken"]},"M1T":{"title":"Valfag M1T","pv":false,"note":"3 tysdagar for Allsidig, Ski, Jakt og fiske og Utforsk Norge. Stippar vel òg, sidan nokre er i Biarritz.","subs":[{"f":"Klatring","l":["JH"],"n":15,"max":16,"p":100},{"f":"Sløyd / turkopp","l":["MRS"],"n":14,"max":16,"p":0},{"f":"Keramikk","l":["YBT"],"n":6,"max":16,"p":"Forbruk"},{"f":"Mat i det fri","l":["LM"],"n":17,"max":20,"p":300}]},"M1Biaritz":{"title":"Valfag M1 Biarritz","pv":false,"note":"2 måndagar og ein tysdag for Ski og surf, KRIK og Sport. Stippar vel òg (ikkje stippeundervisning).","subs":[{"f":"Kajakk våtkort","l":["EKN"],"n":16,"max":16,"p":200},{"f":"Volleyball og padel","l":["SAV","SHS"],"n":32,"max":32,"p":400,"sub":"To grupper"},{"f":"Stipp","l":["HS"],"n":null,"max":12}],"extra":["Frisbee","Fjell og bibel"]},"PV44":{"title":"Prosjektveke 44","pv":true,"note":"Onsdag til fredag.","subs":[{"f":"Elvepadling","l":[],"n":13,"max":12,"p":1800},{"f":"Trad-klatring","l":["EA"],"n":16,"max":16,"p":1200},{"f":"Golf","l":["LAH"],"n":11,"max":null,"p":1700},{"f":"Terrengsykkel","l":["JH"],"n":10,"max":16,"p":750},{"f":"Steinsliping","l":["MRS"],"n":9,"max":12,"p":"Forbruk"},{"f":"Keramikk","l":["YBT"],"n":18,"max":16},{"f":"Båtførarprøve","l":["EKN"],"n":17,"max":25},{"f":"Motorsagkurs","l":[],"n":12,"max":12,"sub":"4 dagar, onsdag til laurdag"}]},"PV48":{"title":"Prosjektveke 48","pv":true,"note":"Måndag til fredag.","subs":[{"f":"Jaktveke i Høyanger","l":["PM"],"n":18,"max":13},{"f":"Fridykking","l":["Ekstern"],"n":22,"max":30},{"f":"Klatreveke","l":["JH"],"n":11,"max":16},{"f":"Sport og spel","l":["LAH"],"n":12,"max":16},{"f":"Keramikk","l":["YBT"],"n":null,"max":null},{"f":"Bibel og surf","l":["SHS","SAV"],"n":31,"max":32,"sub":"To grupper"},{"f":"Julebakst og tradisjonsmat","l":["MRS"],"n":12,"max":16}]},"M3T":{"title":"Valfag M3T","pv":false,"note":"4 tysdagar.","subs":[{"f":"Jegerprøve","l":["PM"],"n":null,"max":25},{"f":"Topptur","l":["JH"],"n":null,"max":16},{"f":"Topptur / Fjordium","l":["LAH"],"n":null,"max":16},{"f":"Sløyd","l":["MRS"],"n":null,"max":16},{"f":"Keramikk","l":["YBT"],"n":null,"max":16},{"f":"Topptur / bibel","l":["SHS"],"n":null,"max":16},{"f":"Stipp","l":["HS"],"n":12,"max":12}]},"M2M":{"title":"Valfag M2M","pv":false,"note":"3 måndagar.","subs":[{"f":"KRIK-trening / styrketrening","l":["EA"],"n":null,"max":16},{"f":"Foto / buldring","l":["JH"],"n":null,"max":16},{"f":"Uthald og langrenn","l":["LAH"],"n":null,"max":16},{"f":"Ordets skole","l":["EKN"],"n":null,"max":24},{"f":null,"l":["MRS"],"n":null,"max":16},{"f":null,"l":["SAV"],"n":null,"max":16},{"f":null,"l":["BH"],"n":null,"max":null},{"f":"Stipp","l":["YBT","LM"],"n":12,"max":12}]},"M4T":{"title":"Valfag M4T","pv":false,"note":"4 tysdagar.","subs":[{"f":"Topptur","l":["JH"],"n":null,"max":20},{"f":"Langrenn / topptur","l":["LAH"],"n":null,"max":16},{"f":"Topptur","l":["SAV"],"n":null,"max":20},{"f":"Topptur","l":["EKN"],"n":null,"max":20},{"f":"Steinsliping","l":["MRS"],"n":null,"max":12},{"f":"Keramikk","l":["YBT"],"n":null,"max":15}],"extra":["Mat i det fri","Havkajakk","Stipp i praksis"]},"PV11":{"title":"Prosjektveke 11","pv":true,"note":"Måndag til fredag, saman med spenningskurs.","subs":[{"f":null,"l":["EKN"],"n":null,"max":16},{"f":null,"l":["JH"],"n":null,"max":16},{"f":"Sløyd","l":["MRS"],"n":null,"max":15},{"f":"Keramikk","l":["YBT"],"n":null,"max":16},{"f":"Spenningskurs","l":["LM"],"n":null,"max":5},{"f":"Spenningskurs","l":["LAH"],"n":null,"max":45}],"extra":["Bohuslän?"]}};
 const TS = {"2026-08-21":{"t":"Kristina","n":"Kristina"},"2026-08-22":{"t":"Erlend","n":"Erlend"},"2026-08-23":{"n":"Bodil"},"2026-08-24":{"o":"Steinar","t":"Yngvild","n":"Hedda"},"2026-08-25":{"o":"Lars Anders","t":"Inger Johanne","n":"Oda Sofie"},"2026-08-27":{"t":"Bodil","n":"Hedda"},"2026-08-28":{"o":"Erlend","t":"Steinar","n":"Steinar"},"2026-08-29":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-08-30":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-08-31":{"o":"Hedda","t":"Yngvild","n":"Oda Sofie"},"2026-09-01":{"o":"Oda Sofie","t":"Kristina","n":"Oda Sofie"},"2026-09-02":{"t":"Kristina","n":"Oda Sofie"},"2026-09-03":{"t":"Bodil","n":"Oda Sofie"},"2026-09-04":{"o":"Håkon","t":"Synne","n":"Kristina"},"2026-09-05":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2026-09-06":{"t":"Kristina","n":"Hedda"},"2026-09-07":{"o":"Synne","t":"Yngvild","n":"Hedda"},"2026-09-08":{"o":"Per","t":"Inger Johanne","n":"Hedda"},"2026-09-09":{"o":"Yngvild","t":"Kristina","n":"Hedda"},"2026-09-10":{"t":"Bodil","n":"Hedda"},"2026-09-11":{"t":"Grethe","n":"Synne"},"2026-09-12":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2026-09-13":{"t":"Bodil","n":"Hedda"},"2026-09-14":{"o":"Else","t":"Yngvild","n":"Hedda"},"2026-09-18":{"t":"Lars Anders","n":"Lars Anders"},"2026-09-19":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2026-09-20":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-09-21":{"o":"Eivind","t":"Yngvild","n":"Oda Sofie"},"2026-09-22":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-09-23":{"n":"Oda Sofie"},"2026-09-24":{"t":"Bodil","n":"Oda Sofie"},"2026-09-25":{"t":"Erlend","n":"Erlend"},"2026-09-26":{"o":"Tilsynslærar","t":"Steinar","n":"Steinar"},"2026-09-27":{"t":"Bodil","n":"Hedda"},"2026-09-28":{"o":"Ole","t":"Yngvild","n":"Hedda"},"2026-09-29":{"o":"Inger Johanne","t":"Inger Johanne","n":"Hedda"},"2026-09-30":{"t":"Kristina","n":"Hedda"},"2026-10-01":{"t":"Bodil","n":"Hedda"},"2026-10-02":{"o":"Synne","t":"Grethe","n":"Bakvakt"},"2026-10-11":{"t":"Kristina","n":"Oda Sofie"},"2026-10-12":{"o":"Grethe","t":"Yngvild","n":"Oda Sofie"},"2026-10-13":{"o":"Olav","t":"Inger Johanne","n":"Oda Sofie"},"2026-10-14":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2026-10-15":{"n":"Oda Sofie"},"2026-10-16":{"t":"Håkon","n":"Håkon"},"2026-10-17":{"o":"Tilsynslærar","t":"Lisbeth","n":"Lisbeth"},"2026-10-18":{"t":"Inger Johanne","n":"Hedda"},"2026-10-19":{"o":"Jan","t":"Yngvild","n":"Hedda"},"2026-10-20":{"o":"Runa","t":"Inger Johanne","n":"Hedda"},"2026-10-21":{"t":"Kristina","n":"Hedda"},"2026-10-22":{"t":"Grethe","n":"Hedda"},"2026-10-23":{"t":"Jan","n":"Jan"},"2026-10-24":{"o":"Tilsynslærar","t":"Eivind","n":"Eivind"},"2026-10-25":{"t":"Bodil","n":"Oda Sofie"},"2026-10-26":{"o":"Lisbeth","t":"Yngvild","n":"Oda Sofie"},"2026-10-27":{"o":"Karolina","t":"Inger Johanne","n":"Oda Sofie"},"2026-10-28":{"o":"Leah","t":"Kristina","n":"Oda Sofie"},"2026-10-29":{"o":"Hildegunn","t":"Bodil","n":"Oda Sofie"},"2026-10-30":{"o":"Eivind","t":"Grethe","n":"Erlend"},"2026-10-31":{"o":"Tilsynslærar","t":"Erlend","n":"Erlend"},"2026-11-01":{"t":"Kristina","n":"Hedda"},"2026-11-02":{"o":"Ole","t":"Yngvild","n":"Hedda"},"2026-11-03":{"o":"Selma","t":"Grethe","n":"Hedda"},"2026-11-04":{"t":"Kristina","n":"Hedda"},"2026-11-05":{"t":"Bodil","n":"Hedda"},"2026-11-06":{"o":"Leander","t":"Erlend","n":"Erlend"},"2026-11-07":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2026-11-08":{"t":"Kristina","n":"Kristina"},"2026-11-09":{"o":"Kristina","t":"Yngvild","n":"Yngvild"},"2026-11-10":{"o":"Marie Elise","t":"Inger Johanne","n":"Inger Johanne"},"2026-11-11":{"o":"Orvar","t":"Eivind","n":"Eivind"},"2026-11-12":{"t":"Bodil","n":"Bodil"},"2026-11-13":{"t":"Synne","n":"Synne"},"2026-11-14":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2026-11-15":{"t":"Inger Johanne","n":"Oda Sofie"},"2026-11-16":{"o":"Else","t":"Yngvild","n":"Oda Sofie"},"2026-11-17":{"o":"Andrea","t":"Inger Johanne","n":"Oda Sofie"},"2026-11-18":{"o":"Håvard","t":"Kristina","n":"Oda Sofie"},"2026-11-19":{"o":"Torill","t":"Bodil","n":"Oda Sofie"},"2026-11-20":{"o":"Maria","t":"Grethe","n":"Håkon"},"2026-11-21":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-11-22":{"t":"Kristina","n":"Hedda"},"2026-11-23":{"o":"Per","t":"Yngvild","n":"Hedda"},"2026-11-24":{"o":"Hedda","t":"Inger Johanne","n":"Hedda"},"2026-11-25":{"o":"Yngvild","t":"Kristina","n":"Hedda"},"2026-11-26":{"o":"Bodil","t":"Bodil","n":"Hedda"},"2026-11-27":{"o":"Grethe","t":"Jan","n":"Jan"},"2026-11-28":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2026-11-29":{"t":"Bodil","n":"Oda Sofie"},"2026-11-30":{"o":"Oda Sofie","t":"Yngvild","n":"Oda Sofie"},"2026-12-01":{"o":"Steinar","t":"Inger Johanne","n":"Oda Sofie"},"2026-12-02":{"o":"Håkon","t":"Kristina","n":"Oda Sofie"},"2026-12-03":{"t":"Bodil","n":"Oda Sofie"},"2026-12-04":{"t":"Lars Anders","n":"Lars Anders"},"2026-12-05":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2026-12-06":{"t":"Inger Johanne","n":"Hedda"},"2026-12-07":{"o":"Yngvild","t":"Yngvild","n":"Hedda"},"2026-12-08":{"o":"Jan","t":"Inger Johanne","n":"Hedda"},"2026-12-09":{"o":"Hildegunn","t":"Kristina","n":"Hedda"},"2026-12-10":{"o":"Erlend","t":"Bodil","n":"Hedda"},"2026-12-11":{"t":"Grethe","n":"Kristina"},"2026-12-12":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2026-12-13":{"t":"Bodil","n":"Oda Sofie"},"2026-12-14":{"o":"Maria","t":"Yngvild","n":"Oda Sofie"},"2026-12-15":{"t":"Inger Johanne","n":"Oda Sofie"},"2027-01-03":{"t":"Bodil","n":"Bodil"},"2027-01-04":{"o":"Ole Martin","t":"Yngvild","n":"Yngvild"},"2027-01-05":{"o":"Leah","t":"Inger Johanne","n":"Inger Johanne"},"2027-01-06":{"o":"Orvar","t":"Kristina","n":"Kristina"},"2027-01-07":{"t":"Bodil","n":"Bodil"},"2027-01-08":{"t":"Håkon","n":"Håkon"},"2027-01-09":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-01-10":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-01-11":{"t":"Yngvild","n":"Yngvild"},"2027-01-12":{"o":"Runa","t":"Inger Johanne","n":"Inger Johanne"},"2027-01-13":{"o":"Magnus","t":"Kristina","n":"Kristina"},"2027-01-14":{"t":"Bodil","n":"Bodil"},"2027-01-15":{"t":"Grethe","n":"Kristina"},"2027-01-16":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2027-01-17":{"t":"Kristina","n":"Hedda"},"2027-01-18":{"o":"Hedda","t":"Yngvild","n":"Hedda"},"2027-01-19":{"o":"Karolina","t":"Inger Johanne","n":"Hedda"},"2027-01-20":{"o":"Olav","t":"Kristina","n":"Hedda"},"2027-01-21":{"t":"Bodil","n":"Hedda"},"2027-01-22":{"t":"Grethe","n":"Steinar"},"2027-01-23":{"o":"Tilsynslærar","t":"Steinar","n":"Steinar"},"2027-01-24":{"t":"Bodil","n":"Oda Sofie"},"2027-01-25":{"o":"Synne"},"2027-01-29":{"t":"Lars Anders","n":"Lars Anders"},"2027-01-30":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-01-31":{"t":"Inger Johanne","n":"Hedda"},"2027-02-01":{"o":"Oda Sofie","t":"Yngvild","n":"Hedda"},"2027-02-02":{"o":"Selma","t":"Inger Johanne","n":"Hedda"},"2027-02-03":{"o":"Leander","t":"Kristina","n":"Hedda"},"2027-02-04":{"t":"Bodil","n":"Hedda"},"2027-02-05":{"t":"Grethe","n":"Erlend"},"2027-02-06":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-02-07":{"t":"Kristina","n":"Oda Sofie"},"2027-02-08":{"o":"Per","t":"Yngvild","n":"Oda Sofie"},"2027-02-09":{"o":"Marie Elise","t":"Inger Johanne","n":"Oda Sofie"},"2027-02-10":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2027-02-11":{"t":"Bodil","n":"Oda Sofie"},"2027-02-12":{"t":"Grethe","n":"Jan"},"2027-02-13":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-02-14":{"t":"Bodil","n":"Hedda"},"2027-02-15":{"o":"Inger Johanne","t":"Yngvild","n":"Hedda"},"2027-02-16":{"o":"Andrea","t":"Inger Johanne","n":"Hedda"},"2027-02-17":{"o":"Håvard","t":"Kristina","n":"Hedda"},"2027-02-18":{"o":"Bodil","t":"Bodil","n":"Hedda"},"2027-02-19":{"o":"Ole Martin","t":"Kristina","n":"Kristina"},"2027-02-28":{"t":"Kristina","n":"Kristina"},"2027-03-01":{"o":"Oda Sofie","t":"Yngvild","n":"Yngvild"},"2027-03-02":{"o":"Leah","t":"Inger Johanne","n":"Inger Johanne"},"2027-03-03":{"o":"Orvar","t":"Kristina","n":"Kristina"},"2027-03-04":{"t":"Bodil","n":"Bodil"},"2027-03-05":{"t":"Jan","n":"Jan"},"2027-03-06":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2027-03-07":{"t":"Inger Johanne","n":"Oda Sofie"},"2027-03-08":{"o":"Yngvild","t":"Yngvild","n":"Oda Sofie"},"2027-03-09":{"o":"Runa","t":"Inger Johanne","n":"Oda Sofie"},"2027-03-10":{"o":"Magnus","t":"Kristina","n":"Oda Sofie"},"2027-03-11":{"t":"Bodil","n":"Oda Sofie"},"2027-03-12":{"t":"Håkon","n":"Håkon"},"2027-03-13":{"o":"Tilsynslærar","t":"Eivind","n":"Eivind"},"2027-03-14":{"t":"Bodil","n":"Hedda"},"2027-03-15":{"o":"Hedda","t":"Yngvild","n":"Hedda"},"2027-03-16":{"o":"Karolina","t":"Inger Johanne","n":"Hedda"},"2027-03-17":{"o":"Olav","t":"Jan","n":"Hedda"},"2027-03-18":{"o":"Maria","t":"Bodil","n":"Hedda"},"2027-03-19":{"o":"Eivind","t":"Grethe","n":"Bakvakt"},"2027-03-29":{"t":"Yngvild","n":"Yngvild"},"2027-03-30":{"o":"Kristina","t":"Inger Johanne","n":"Hedda"},"2027-03-31":{"o":"Selma","t":"Kristina","n":"Hedda"},"2027-04-01":{"t":"Bodil","n":"Hedda"},"2027-04-02":{"t":"Grethe","n":"Kristina"},"2027-04-03":{"o":"Tilsynslærar","t":"Kristina","n":"Kristina"},"2027-04-04":{"t":"Kristina","n":"Oda Sofie"},"2027-04-05":{"o":"Jan","t":"Yngvild","n":"Oda Sofie"},"2027-04-06":{"o":"Marie Elise","t":"Inger Johanne","n":"Oda Sofie"},"2027-04-07":{"o":"Børge","t":"Kristina","n":"Oda Sofie"},"2027-04-08":{"t":"Grethe","n":"Oda Sofie"},"2027-04-09":{"t":"Synne","n":"Synne"},"2027-04-10":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2027-04-11":{"t":"Inger Johanne","n":"Hedda"},"2027-04-12":{"o":"Leander"},"2027-04-16":{"t":"Jan","n":"Jan"},"2027-04-17":{"o":"Tilsynslærar","t":"Jan","n":"Jan"},"2027-04-18":{"t":"Bodil","n":"Oda Sofie"},"2027-04-19":{"o":"Lars Anders","t":"Yngvild","n":"Oda Sofie"},"2027-04-20":{"o":"Andrea","t":"Inger Johanne","n":"Oda Sofie"},"2027-04-21":{"o":"Håvard","t":"Kristina","n":"Oda Sofie"},"2027-04-22":{"t":"Bodil","n":"Oda Sofie"},"2027-04-23":{"t":"Grethe","n":"Lars Anders"},"2027-04-24":{"o":"Tilsynslærar","t":"Lars Anders","n":"Lars Anders"},"2027-04-25":{"t":"Kristina","n":"Kristina"},"2027-04-26":{"o":"Steinar","t":"Yngvild","n":"Yngvild"},"2027-04-27":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-04-28":{"t":"Kristina","n":"Kristina"},"2027-04-29":{"t":"Bodil","n":"Bodil"},"2027-04-30":{"t":"Steinar","n":"Steinar"},"2027-05-01":{"o":"Tilsynslærar","t":"Håkon","n":"Håkon"},"2027-05-02":{"t":"Inger Johanne","n":"Inger Johanne"},"2027-05-03":{"o":"Oda Sofie","t":"Yngvild","n":"Hedda"},"2027-05-04":{"o":"Lisbeth"},"2027-05-06":{"t":"Bodil","n":"Oda Sofie"},"2027-05-07":{"o":"Erlend","t":"Synne","n":"Synne"},"2027-05-08":{"o":"Tilsynslærar","t":"Synne","n":"Synne"},"2027-05-09":{"t":"Bodil","n":"Oda Sofie"},"2027-05-10":{"o":"Maria","t":"Yngvild","n":"Oda Sofie"},"2027-05-11":{"o":"Håkon","t":"Inger Johanne","n":"Oda Sofie"},"2027-05-12":{"o":"Hedda"}};
 const NAMES = {"EA":"Erlend","PM":"Per","JH":"Jan","MRS":"Maria","YBT":"Yngvild","LM":"Lisbeth","EKN":"Eivind","SAV":"Synne","SHS":"Steinar","HS":"Håkon","LAH":"Lars Anders","BH":"Bodil"};  // lærarinitialar -> fornamn
-const AHEAD = 3;          // tal på veker under denne veka
+const AHEAD = 5;          // tal på veker i tavla under denne veka
+const MODS_AHEAD = 1;     // valfag/prosjekt i boksen til høgre: denne veka + neste
+const MODS_MAX = 3;       // maks tal på modular i boksen
 
 const MON = ["jan", "feb", "mar", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "des"];
 const DAYN = ["Måndag", "Tysdag", "Onsdag", "Torsdag", "Fredag", "Laurdag"];
@@ -262,12 +264,13 @@ function duty(now) {
 // Modular som går denne veka eller dei næraste vekene, med dagane dei går.
 function mods(now, idx) {
   const today = startOfDay(now), found = {}, order = [];
-  WEEKS.slice(Math.max(idx, 0), idx + 1 + AHEAD).forEach(w => w.days.slice(0, 5).forEach((d, i) => groupsFor(w, d).forEach(k => {
+  WEEKS.slice(Math.max(idx, 0), idx + 1 + MODS_AHEAD).forEach(w => w.days.slice(0, 5).forEach((d, i) => groupsFor(w, d).forEach(k => {
     const date = addDays(parse(w.mon), i);
     if (date < today) return;
     if (!found[k]) { found[k] = []; order.push(k); }
     found[k].push({ w, i, date });
   })));
+  order.splice(MODS_MAX);
   const panel = $("mods-panel");
   panel.hidden = !order.length;
   $("mods").innerHTML = order.map(k => {
@@ -290,22 +293,38 @@ function mods(now, idx) {
 
 function tick() {
   const now = new Date();
-  $("clock-t").textContent = now.toLocaleTimeString("nn-NO", { hour: "2-digit", minute: "2-digit" });
+  $("clock-t").textContent = now.toLocaleTimeString("nn-NO", { hour: "2-digit", minute: "2-digit", hour12: false });
   const d = DAYL[now.getDay()];
   $("clock-d").textContent = `${d[0].toUpperCase() + d.slice(1)} ${now.getDate()}. ${MON[now.getMonth()]} ${now.getFullYear()}`;
 }
 let lastDay = "";
-function render() {
+var render = function() {
   const now = new Date(), { idx, label } = currentIdx(now);
   tick(); hero(now, idx, label); board(idx); duty(now); mods(now, idx);
   lastDay = now.toDateString();
 }
+// Skaler skrifta så heile innhaldet får plass på skjermen utan scrolling.
+function fit() {
+  const root = document.documentElement, scr = $("screen");
+  let fs = Math.max(11, Math.min(32, innerWidth / 90));
+  root.style.setProperty("--fs", fs + "px");
+  while (scr.scrollHeight > innerHeight && fs > 7) { fs -= 0.25; root.style.setProperty("--fs", fs + "px"); }
+}
+const _render = render;
+render = function () { _render(); fit(); };
 render();
+addEventListener("resize", fit);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 // Klokka går kvart 15. sekund; ved ny dag blir heile skjermen teikna på nytt.
 setInterval(() => { new Date().toDateString() === lastDay ? tick() : render(); }, 15000);
 // Hald skjermen vaken der nettlesaren tillèt det.
 async function wake() { try { if (document.visibilityState === "visible" && navigator.wakeLock) await navigator.wakeLock.request("screen"); } catch (e) {} }
 wake(); document.addEventListener("visibilitychange", wake);
+// Last sida på nytt kvar time, slik at nye versjonar på GitHub kjem fram av seg sjølv.
+// Sjekkar først at sida er tilgjengeleg, så skjermen ikkje blir blank om nettet er nede.
+setInterval(async () => {
+  try { const r = await fetch(location.href, { cache: "no-store" }); if (r.ok) location.reload(); } catch (e) {}
+}, 60 * 60 * 1000);
 </script>
 
 </body></html>
